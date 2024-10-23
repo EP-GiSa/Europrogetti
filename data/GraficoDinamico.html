@@ -155,8 +155,16 @@
             chart2.options.scales.x.title.text = translations[selectedLang].xAxis;
             chart2.options.scales.y.title.text = translations[selectedLang].yAxis;
             chart2.update();
+            
+            // Aggiorna il disclaimer
+            if (selectedLang === 'it') {
+                document.getElementById('disclaimer-it').style.display = 'block';
+                document.getElementById('disclaimer-en').style.display = 'none';
+            } else {
+                document.getElementById('disclaimer-it').style.display = 'none';
+                document.getElementById('disclaimer-en').style.display = 'block';
+            }
         }
-
 
         // Dati per il primo grafico
         const lunghezzaMT = [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64];
