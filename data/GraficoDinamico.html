@@ -106,13 +106,15 @@
         </div>
     </div>
 
-        <!-- Disclaimer in italiano e inglese -->
-    <div id="disclaimer" style="margin-top: 20px;">
-        <p lang="it">Disclaimer<br>
-        Il presente tool è fornito esclusivamente come strumento di supporto per la selezione dei formati e non costituisce in alcun modo una specifica tecnica vincolante. Si raccomanda ai clienti di effettuare sempre un controllo accurato e definitivo dei parametri selezionati prima di procedere all'uso pratico. Europrogetti non si assume alcuna responsabilità per eventuali danni, diretti o indiretti, derivanti dall'utilizzo del tool online o dall'affidamento sui risultati generati. L'utilizzo del tool è a discrezione e sotto la responsabilità esclusiva dell'utente.</p>
-        <p lang="en">Disclaimer<br>
-        This tool is provided solely as a support instrument for format selection and does not constitute any binding technical specification. Customers are advised to always conduct a thorough and final check of the selected parameters before proceeding with practical use. Europrogetti assumes no liability for any damages, direct or indirect, arising from the use of the online tool or reliance on the results generated. Use of the tool is at the sole discretion and responsibility of the user.</p>
-    </div>
+<!-- Disclaimer in italiano e inglese -->
+<div id="disclaimer-it" style="display: block;">
+    <p lang="it">Disclaimer<br>
+    Il presente tool è fornito esclusivamente come strumento di supporto per la selezione dei formati e non costituisce in alcun modo una specifica tecnica vincolante. Si raccomanda ai clienti di effettuare sempre un controllo accurato e definitivo dei parametri selezionati prima di procedere all'uso pratico. Europrogetti non si assume alcuna responsabilità per eventuali danni, diretti o indiretti, derivanti dall'utilizzo del tool online o dall'affidamento sui risultati generati. L'utilizzo del tool è a discrezione e sotto la responsabilità esclusiva dell'utente.</p>
+</div>
+<div id="disclaimer-en" style="display: none;">
+    <p lang="en">Disclaimer<br>
+    This tool is provided solely as a support instrument for format selection and does not constitute any binding technical specification. Customers are advised to always conduct a thorough and final check of the selected parameters before proceeding with practical use. Europrogetti assumes no liability for any damages, direct or indirect, arising from the use of the online tool or reliance on the results generated. Use of the tool is at the sole discretion and responsibility of the user.</p>
+</div>
 
     <script>
         const translations = {
@@ -138,33 +140,34 @@
             }
         };
 
-        function changeLanguage() {
-            const selectedLang = document.getElementById('language').value;
-            document.getElementById('title').innerText = translations[selectedLang].title;
-            document.getElementById('label-spessore').innerText = translations[selectedLang].spessore;
-            document.getElementById('label-rimbocco').innerText = translations[selectedLang].rimbocco;
-            document.getElementById('update-button').innerText = translations[selectedLang].updateButton;
+      function changeLanguage() {
+    const selectedLang = document.getElementById('language').value;
+    document.getElementById('title').innerText = translations[selectedLang].title;
+    document.getElementById('label-spessore').innerText = translations[selectedLang].spessore;
+    document.getElementById('label-rimbocco').innerText = translations[selectedLang].rimbocco;
+    document.getElementById('update-button').innerText = translations[selectedLang].updateButton;
 
-            // Aggiorna i titoli dei grafici
-            chart.options.plugins.title.text = translations[selectedLang].chart1Title;
-            chart.options.scales.x.title.text = translations[selectedLang].xAxis;
-            chart.options.scales.y.title.text = translations[selectedLang].yAxis;
-            chart.update();
+    // Aggiorna i titoli dei grafici
+    chart.options.plugins.title.text = translations[selectedLang].chart1Title;
+    chart.options.scales.x.title.text = translations[selectedLang].xAxis;
+    chart.options.scales.y.title.text = translations[selectedLang].yAxis;
+    chart.update();
 
-            chart2.options.plugins.title.text = translations[selectedLang].chart2Title;
-            chart2.options.scales.x.title.text = translations[selectedLang].xAxis;
-            chart2.options.scales.y.title.text = translations[selectedLang].yAxis;
-            chart2.update();
-            
-            // Aggiorna il disclaimer
-            if (selectedLang === 'it') {
-                document.getElementById('disclaimer-it').style.display = 'block';
-                document.getElementById('disclaimer-en').style.display = 'none';
-            } else {
-                document.getElementById('disclaimer-it').style.display = 'none';
-                document.getElementById('disclaimer-en').style.display = 'block';
-            }
-        }
+    chart2.options.plugins.title.text = translations[selectedLang].chart2Title;
+    chart2.options.scales.x.title.text = translations[selectedLang].xAxis;
+    chart2.options.scales.y.title.text = translations[selectedLang].yAxis;
+    chart2.update();
+    
+    // Aggiorna il disclaimer
+    if (selectedLang === 'it') {
+        document.getElementById('disclaimer-it').style.display = 'block';
+        document.getElementById('disclaimer-en').style.display = 'none';
+    } else {
+        document.getElementById('disclaimer-it').style.display = 'none';
+        document.getElementById('disclaimer-en').style.display = 'block';
+    }
+}
+
 
         // Dati per il primo grafico
         const lunghezzaMT = [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64];
