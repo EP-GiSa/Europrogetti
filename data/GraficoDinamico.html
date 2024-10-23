@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stima altezza mezzo-taglio nei formati limite per EP130N</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Contenitore per i grafici e il form */
+        #container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* Grafici affiancati, ciascuno occupa metà pagina */
+        .chart-container {
+            width: 48%; /* Larghezza di ciascun grafico */
+        }
+
+        /* Canvas per i grafici */
+        canvas {
+            width: 100%;
+            height: auto; /* Altezza automatica */
+        }
+
+        /* Form posizionato sopra il primo grafico */
+        #form-container {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Stile del bottone */
+        button {
+            background-color: #add8e6; /* Sfondo blu chiaro */
+            border-radius: 12px; /* Bordi arrotondati */
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #87ceeb; /* Blu più scuro al passaggio del mouse */
+        }
+
+        /* Stile del logo in alto a destra */
+        #logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="data/Logo-standard-trasparente.png" id="logo" alt="Logo Euro Progetti">
+    
+    <h1>Stima altezza mezzo-taglio nei formati limite per EP130N</h1>
+
+    <!-- Form sopra il primo grafico -->
+    <div id="form-container">
+        <form id="dataForm">
+            <label for="spessore">Spessore (0.8 - 3.0 mm):</label>
+            <input type="number" id="spessore" name="spessore" step="0.1" min="0.8" max="3.0" value="1.0">
+            
+            <label for="rimbocco">Rimbocco (min 7 mm - max Altezza MT + 10):</label>
+            <input type="number" id="rimbocco" name="rimbocco" step="0.1" min="7" value="12.0">
+
+            <button type="button" onclick="updateChart()">Aggiorna Grafico</button>
+        </form>
+    </div>
+
+    <!-- Contenitore per i grafici affiancati -->
+    <div id="container">
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="mySecondChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Dati per il primo grafico
+        const lunghezzaMT = [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64];
+        const lunghezzaCarta = 106;
+        let rimbocco = 12.0;
+        let spessore = 1.0;
+
+        // Dati per il secondo grafico
+        const lunghezzaMTSecond = [
+            350, 349, 348, 347, 346, 345, 344, 343, 342, 341, 340, 339, 338, 337, 336, 335, 334, 333, 332, 331, 330,
+            329, 328, 327, 326, 325, 324, 323, 322, 321, 320, 319, 318, 317, 316, 315
+        ];
+        const lunghezzaCartaSecond = 610;
+
+        // Funzione per calcolare Extra carta e Altezza MT
+        function calcolaValori(spessore, rimbocco, lunghezzaMT, lunghezzaCarta) {
+            const sin45 = Math.sin(Math.PI / 4); // Seno di 45° in radianti
+            const extraCarta = 2 * spessore + (2 * spessore * sin45);
+
+            const altezzaMT = lunghezzaMT.map(mt => {
+                let altezza = (lunghezzaCarta - mt - 2 * rimbocco - extraCarta) / 2;
+                altezza = Math.round(altezza * 2) / 2; // Arrotondato a 0.5mm
+                return altezza < 12 ? 12 : altezza; // Limite minimo di 12mm per Altezza MT nel primo grafico
+            });
+
+            return { extraCarta, altezzaMT };
+        }
+
+        // Funzione per calcolare Extra carta e Altezza MT per il secondo grafico con limite massimo a 130 mm
+        function calcolaValoriSecondo(spessore, rimbocco, lunghezzaMTSecond, lunghezzaCartaSecond) {
+            const sin45 = Math.sin(Math.PI / 4); // Seno di 45° in radianti
+            const extraCarta = 2 * spessore + (2 * spessore * sin45);
+
+            const altezzaMT = lunghezzaMTSecond.map(mt => {
+                let altezza = (lunghezzaCartaSecond - mt - 2 * rimbocco - extraCarta) / 2;
+                altezza = Math.round(altezza * 2) / 2; // Arrotondato a 0.5mm
+                return altezza > 130 ? 130 : altezza; // Limite massimo di 130mm per Altezza MT nel secondo grafico
+            });
+
+            return { extraCarta, altezzaMT };
+        }
+
+        // Configurazione del primo grafico
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: lunghezzaMT, // Lunghezza MT sulle ascisse
+                datasets: [
+                    {
+                        label: 'Altezza MT',
+                        data: calcolaValori(spessore, rimbocco, lunghezzaMT, lunghezzaCarta).altezzaMT,
+                        borderColor: 'blue', // Colore blu per Altezza MT
+                        borderWidth: 3,
+                        fill: false
+                    },
+                    {
+                        label: 'Rimbocco',
+                        data: lunghezzaMT.map(() => rimbocco),
+                        borderColor: 'red', // Colore rosso per Rimbocco
+                        borderWidth: 1,
+                        fill: false
+                    },
+                    {
+                        label: 'Spessore',
+                        data: lunghezzaMT.map(() => spessore),
+                        borderColor: 'green', // Colore verde per Spessore
+                        borderWidth: 1,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Parametri carta minima' // Titolo del primo grafico
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Lunghezza MT (mm)' // Dicitura aggiornata per l'asse delle ascisse
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'mm'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Configurazione del secondo grafico
+        let ctx2 = document.getElementById('mySecondChart').getContext('2d');
+        let chart2 = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: lunghezzaMTSecond.reverse(), // Inversione dell'asse delle ascisse
+                datasets: [
+                    {
+                        label: 'Altezza MT',
+                        data: calcolaValoriSecondo(spessore, rimbocco, lunghezzaMTSecond, lunghezzaCartaSecond).altezzaMT,
+                        borderColor: 'blue', // Colore blu per Altezza MT
+                        borderWidth: 3,
+                        fill: false
+                    },
+                    {
+                        label: 'Rimbocco',
+                        data: lunghezzaMTSecond.map(() => rimbocco),
+                        borderColor: 'red', // Colore rosso per Rimbocco
+                        borderWidth: 1,
+                        fill: false
+                    },
+                    {
+                        label: 'Spessore',
+                        data: lunghezzaMTSecond.map(() => spessore),
+                        borderColor: 'green', // Colore verde per Spessore
+                        borderWidth: 1,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Parametri carta massima' // Titolo del secondo grafico
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Lunghezza MT (mm)' // Dicitura aggiornata per l'asse delle ascisse
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'mm'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Funzione per aggiornare i grafici
+        function updateChart() {
+            // Prendi i nuovi valori dall'input
+            let newSpessore = parseFloat(document.getElementById('spessore').value);
+            let newRimbocco = parseFloat(document.getElementById('rimbocco').value);
+
+            // Calcola nuovi valori per i due grafici
+            let valoriCalcolati = calcolaValori(newSpessore, newRimbocco, lunghezzaMT, lunghezzaCarta);
+            let valoriCalcolatiSecond = calcolaValoriSecondo(newSpessore, newRimbocco, lunghezzaMTSecond, lunghezzaCartaSecond);
+
+            // Aggiorna il primo grafico
+            chart.data.datasets[0].data = valoriCalcolati.altezzaMT;
+            chart.data.datasets[1].data = lunghezzaMT.map(() => newRimbocco);
+            chart.data.datasets[2].data = lunghezzaMT.map(() => newSpessore);
+            chart.update();
+
+            // Aggiorna il secondo grafico
+            chart2.data.datasets[0].data = valoriCalcolatiSecond.altezzaMT;
+            chart2.data.datasets[1].data = lunghezzaMTSecond.map(() => newRimbocco);
+            chart2.data.datasets[2].data = lunghezzaMTSecond.map(() => newSpessore);
+            chart2.update();
+        }
+
+    </script>
+
+</body>
+</html>
