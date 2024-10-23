@@ -67,10 +67,6 @@
             right: 120px;
             width: 150px;
         }
-
-        .readonly-textbox {
-    background-color: lightgray; /* Colore di sfondo grigio */
-}
     </style>
 </head>
 <body>
@@ -96,10 +92,6 @@
             <input type="number" id="rimbocco" name="rimbocco" step="0.1" min="7" value="12.0">
 
             <button type="button" onclick="updateChart()" id="update-button">Aggiorna Grafico</button>
-
-                        <label for="extraCarta">Extra Carta (mm):</label>
-            <input type="text" id="extraCarta" value="0" readonly class="readonly-textbox">
-            
         </form>
     </div>
 
@@ -131,8 +123,8 @@
                 spessore: "Spessore (0.8 - 3.0 mm):",
                 rimbocco: "Rimbocco (min 7 mm - max Altezza MT + 10):",
                 updateButton: "Aggiorna Grafico",
-                chart1Title: "Parametri carta minima (106 mm)",
-                chart2Title: "Parametri carta massima (610 mm)",
+                chart1Title: "Parametri carta minima",
+                chart2Title: "Parametri carta massima",
                 xAxis: "Lunghezza MT (mm)",
                 yAxis: "mm"
             },
@@ -141,8 +133,8 @@
                 spessore: "Thickness (0.8 - 3.0 mm):",
                 rimbocco: "Overlap (min 7 mm - max Height MT + 10):",
                 updateButton: "Update Chart",
-                chart1Title: "Minimum Paper Parameters (106 mm)",
-                chart2Title: "Maximum Paper Parameters (610 mm)",
+                chart1Title: "Minimum Paper Parameters",
+                chart2Title: "Maximum Paper Parameters",
                 xAxis: "Length MT (mm)",
                 yAxis: "mm"
             }
@@ -200,9 +192,6 @@
                 altezza = Math.round(altezza * 2) / 2; // Arrotondato a 0.5mm
                 return altezza < 12 ? 12 : altezza; // Limite minimo di 12mm per Altezza MT nel primo grafico
             });
-
-                // Aggiorna il campo "Extra Carta" nel form
-    document.getElementById('extraCarta').value = extraCarta.toFixed(2); // Mostra fino a due decimali
 
             return { extraCarta, altezzaMT };
         }
@@ -334,28 +323,27 @@
         });
 
         // Funzione per aggiornare i grafici
-function updateChart() {
-    // Prendi i nuovi valori dall'input
-    let newSpessore = parseFloat(document.getElementById('spessore').value);
-    let newRimbocco = parseFloat(document.getElementById('rimbocco').value);
-    let lunghezzaCarta = parseFloat(document.getElementById('lunghezzaCarta').value);
+        function updateChart() {
+            // Prendi i nuovi valori dall'input
+            let newSpessore = parseFloat(document.getElementById('spessore').value);
+            let newRimbocco = parseFloat(document.getElementById('rimbocco').value);
 
-    // Calcola nuovi valori per i due grafici
-    let valoriCalcolati = calcolaValori(newSpessore, newRimbocco, lunghezzaMT, lunghezzaCarta);
-    let valoriCalcolatiSecond = calcolaValoriSecondo(newSpessore, newRimbocco, lunghezzaMTSecond, lunghezzaCartaSecond);
+            // Calcola nuovi valori per i due grafici
+            let valoriCalcolati = calcolaValori(newSpessore, newRimbocco, lunghezzaMT, lunghezzaCarta);
+            let valoriCalcolatiSecond = calcolaValoriSecondo(newSpessore, newRimbocco, lunghezzaMTSecond, lunghezzaCartaSecond);
 
-    // Aggiorna il primo grafico
-    chart.data.datasets[0].data = valoriCalcolati.altezzaMT;
-    chart.data.datasets[1].data = lunghezzaMT.map(() => newRimbocco);
-    chart.data.datasets[2].data = lunghezzaMT.map(() => newSpessore);
-    chart.update();
+            // Aggiorna il primo grafico
+            chart.data.datasets[0].data = valoriCalcolati.altezzaMT;
+            chart.data.datasets[1].data = lunghezzaMT.map(() => newRimbocco);
+            chart.data.datasets[2].data = lunghezzaMT.map(() => newSpessore);
+            chart.update();
 
-    // Aggiorna il secondo grafico
-    chart2.data.datasets[0].data = valoriCalcolatiSecond.altezzaMT;
-    chart2.data.datasets[1].data = lunghezzaMTSecond.map(() => newRimbocco);
-    chart2.data.datasets[2].data = lunghezzaMTSecond.map(() => newSpessore);
-    chart2.update();
-}
+            // Aggiorna il secondo grafico
+            chart2.data.datasets[0].data = valoriCalcolatiSecond.altezzaMT;
+            chart2.data.datasets[1].data = lunghezzaMTSecond.map(() => newRimbocco);
+            chart2.data.datasets[2].data = lunghezzaMTSecond.map(() => newSpessore);
+            chart2.update();
+        }
 
     </script>
 
