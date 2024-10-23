@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strumenti - Europrogetti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .card-body {
+            background-color: #ffffff;
+        }
+        .language-select {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="language-select">
+        <select id="languageSelect" onchange="setLanguage()">
+            <option value="ita">Italiano</option>
+            <option value="eng">English</option>
+            <option value="fra">Français</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <h1 data-ita="Strumenti Europrogetti Online" data-eng="Europrogetti Online Tools" data-fra="Outils Europrogetti en Ligne">Strumenti Europrogetti Online</h1>
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" data-ita="Stima altezza mezzo-taglio EP130N" data-eng="Estimate Half-Cut Height EP130N" data-fra="Estimation de la hauteur demi-coupe EP130N">Stima altezza mezzo-taglio EP130N</h5>
+                        <p class="card-text" data-ita="Strumento per stimare l'altezza ammissibile in base alla dimensione di carta massima o minima." data-eng="Tool to estimate the allowable height based on the maximum or minimum paper size." data-fra="Outil pour estimer la hauteur admissible en fonction de la taille maximale ou minimale du papier.">Strumento per stimare l'altezza ammissibile in base alla dimensione di carta massima o minima.</p>
+                        <a href="https://ep-gisa.github.io/Europrogetti/data/graficodinamico.html" target="_blank" class="btn btn-primary" data-ita="Vai allo Strumento" data-eng="Go to Tool" data-fra="Aller à l'Outil">Vai allo Strumento</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" data-ita="Misuratore spessore multiplo SX200" data-eng="Multiple Thickness Gauge SX200" data-fra="Jauge d'Épaisseur Multiple SX200">Misuratore spessore multiplo SX200</h5>
+                        <p class="card-text" data-ita="Strumento avanzato per misurare lo spessore di diversi materiali in tempo reale." data-eng="Advanced tool to measure the thickness of different materials in real-time." data-fra="Outil avancé pour mesurer l'épaisseur de différents matériaux en temps réel.">Strumento avanzato per misurare lo spessore di diversi materiali in tempo reale.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" data-ita="Rilevatore di bordi HB400" data-eng="Edge Detector HB400" data-fra="Détecteur de Bords HB400">Rilevatore di bordi HB400</h5>
+                        <p class="card-text" data-ita="Strumento per il rilevamento automatico dei bordi su materiali industriali." data-eng="Tool for automatic edge detection on industrial materials." data-fra="Outil pour la détection automatique des bords sur les matériaux industriels.">Strumento per il rilevamento automatico dei bordi su materiali industriali.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" data-ita="Calibratore di pressione DP900" data-eng="Pressure Calibrator DP900" data-fra="Calibrateur de Pression DP900">Calibratore di pressione DP900</h5>
+                        <p class="card-text" data-ita="Sistema di calibrazione per la gestione della pressione in vari processi produttivi." data-eng="Calibration system for managing pressure in various production processes." data-fra="Système de calibration pour la gestion de la pression dans divers processus de production.">Sistema di calibrazione per la gestione della pressione in vari processi produttivi.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" data-ita="Analizzatore di precisione PLX500" data-eng="Precision Analyzer PLX500" data-fra="Analyseur de Précision PLX500">Analizzatore di precisione PLX500</h5>
+                        <p class="card-text" data-ita="Dispositivo di analisi per processi industriali con alta precisione e affidabilità." data-eng="Analysis device for industrial processes with high precision and reliability." data-fra="Dispositif d'analyse pour les processus industriels avec une grande précision et fiabilité.">Dispositivo di analisi per processi industriali con alta precisione e affidabilità.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setLanguage() {
+            const selectedLang = document.getElementById('languageSelect').value;
+            const elements = document.querySelectorAll('[data-ita], [data-eng], [data-fra]');
+            
+            elements.forEach(el => {
+                el.innerText = el.getAttribute(`data-${selectedLang}`);
+            });
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
