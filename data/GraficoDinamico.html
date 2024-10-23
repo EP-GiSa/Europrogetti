@@ -67,6 +67,10 @@
             right: 120px;
             width: 150px;
         }
+
+        .readonly-textbox {
+    background-color: lightgray; /* Colore di sfondo grigio */
+}
     </style>
 </head>
 <body>
@@ -91,13 +95,14 @@
             <label id="label-rimbocco" for="rimbocco">Rimbocco (min 7 mm - max Altezza MT + 10):</label>
             <input type="number" id="rimbocco" name="rimbocco" step="0.1" min="7" value="12.0">
 
-                    <label for="lunghezzaCarta">Lunghezza Carta (mm):</label>
-        <input type="text" id="lunghezzaCarta" value="106" readonly>
-
-        <label for="extraCarta">Extra Carta (mm):</label>
-        <input type="text" id="extraCarta" value="0" readonly>
-
             <button type="button" onclick="updateChart()" id="update-button">Aggiorna Grafico</button>
+        </form>
+    </div>
+
+        <div id="form-container">
+        <form id="dataForm">
+            <label for="extraCarta">Extra Carta (mm):</label>
+            <input type="text" id="extraCarta" value="0" readonly class="readonly-textbox">
         </form>
     </div>
 
@@ -129,8 +134,8 @@
                 spessore: "Spessore (0.8 - 3.0 mm):",
                 rimbocco: "Rimbocco (min 7 mm - max Altezza MT + 10):",
                 updateButton: "Aggiorna Grafico",
-                chart1Title: "Parametri carta minima",
-                chart2Title: "Parametri carta massima",
+                chart1Title: "Parametri carta minima (106 mm)",
+                chart2Title: "Parametri carta massima (610 mm)",
                 xAxis: "Lunghezza MT (mm)",
                 yAxis: "mm"
             },
@@ -139,8 +144,8 @@
                 spessore: "Thickness (0.8 - 3.0 mm):",
                 rimbocco: "Overlap (min 7 mm - max Height MT + 10):",
                 updateButton: "Update Chart",
-                chart1Title: "Minimum Paper Parameters",
-                chart2Title: "Maximum Paper Parameters",
+                chart1Title: "Minimum Paper Parameters (106 mm)",
+                chart2Title: "Maximum Paper Parameters (610 mm)",
                 xAxis: "Length MT (mm)",
                 yAxis: "mm"
             }
