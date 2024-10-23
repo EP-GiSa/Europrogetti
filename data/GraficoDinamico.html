@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,12 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
+        }
+
+        #language-selector {
+            position: absolute;
+            top: 20px;
+            left: 20px;
         }
 
         /* Contenitore per i grafici e il form */
@@ -65,20 +71,28 @@
 </head>
 <body>
 
+    <div id="language-selector">
+        <label for="language">Seleziona la lingua / Select Language:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="it">Italiano</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
     <img src="Logo-standard-trasparente.png" id="logo" alt="Logo Euro Progetti">
     
-    <h1>Stima altezza mezzo-taglio nei formati limite per EP130N</h1>
+    <h1 id="title">Stima altezza mezzo-taglio nei formati limite per EP130N</h1>
 
     <!-- Form sopra il primo grafico -->
     <div id="form-container">
         <form id="dataForm">
-            <label for="spessore">Spessore (0.8 - 3.0 mm):</label>
+            <label id="label-spessore" for="spessore">Spessore (0.8 - 3.0 mm):</label>
             <input type="number" id="spessore" name="spessore" step="0.1" min="0.8" max="3.0" value="1.0">
             
-            <label for="rimbocco">Rimbocco (min 7 mm - max Altezza MT + 10):</label>
+            <label id="label-rimbocco" for="rimbocco">Rimbocco (min 7 mm - max Altezza MT + 10):</label>
             <input type="number" id="rimbocco" name="rimbocco" step="0.1" min="7" value="12.0">
 
-            <button type="button" onclick="updateChart()">Aggiorna Grafico</button>
+            <button type="button" onclick="updateChart()" id="update-button">Aggiorna Grafico</button>
         </form>
     </div>
 
@@ -94,6 +108,49 @@
     </div>
 
     <script>
+        const translations = {
+            it: {
+                title: "Stima altezza mezzo-taglio nei formati limite per EP130N",
+                spessore: "Spessore (0.8 - 3.0 mm):",
+                rimbocco: "Rimbocco (min 7 mm - max Altezza MT + 10):",
+                updateButton: "Aggiorna Grafico",
+                chart1Title: "Parametri carta minima",
+                chart2Title: "Parametri carta massima",
+                xAxis: "Lunghezza MT (mm)",
+                yAxis: "mm"
+            },
+            en: {
+                title: "Estimate of half-cut height in limit formats for EP130N",
+                spessore: "Thickness (0.8 - 3.0 mm):",
+                rimbocco: "Overlap (min 7 mm - max Height MT + 10):",
+                updateButton: "Update Chart",
+                chart1Title: "Minimum Paper Parameters",
+                chart2Title: "Maximum Paper Parameters",
+                xAxis: "Length MT (mm)",
+                yAxis: "mm"
+            }
+        };
+
+        function changeLanguage() {
+            const selectedLang = document.getElementById('language').value;
+            document.getElementById('title').innerText = translations[selectedLang].title;
+            document.getElementById('label-spessore').innerText = translations[selectedLang].spessore;
+            document.getElementById('label-rimbocco').innerText = translations[selectedLang].rimbocco;
+            document.getElementById('update-button').innerText = translations[selectedLang].updateButton;
+
+            // Aggiorna i titoli dei grafici
+            chart.options.plugins.title.text = translations[selectedLang].chart1Title;
+            chart.options.scales.x.title.text = translations[selectedLang].xAxis;
+            chart.options.scales.y.title.text = translations[selectedLang].yAxis;
+            chart.update();
+
+            chart2.options.plugins.title.text = translations[selectedLang].chart2Title;
+            chart2.options.scales.x.title.text = translations[selectedLang].xAxis;
+            chart2.options.scales.y.title.text = translations[selectedLang].yAxis;
+            chart2.update();
+        }
+
+
         // Dati per il primo grafico
         const lunghezzaMT = [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64];
         const lunghezzaCarta = 106;
