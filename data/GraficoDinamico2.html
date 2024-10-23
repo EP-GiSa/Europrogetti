@@ -108,7 +108,7 @@
     </div>
 
     <script>
-    const translations = {
+   const translations = {
         it: {
             title: "Stima altezza mezzo-taglio nei formati limite per EP130N",
             spessore: "Spessore (0.8 - 3.0 mm):",
@@ -141,24 +141,58 @@
         }
     };
 
+    function mmToInches(value) {
+        return (value / 25.4).toFixed(3); // Conversione da mm a pollici con tre decimali
+    }
+
+    function convertChartDataToInches(data) {
+        return data.map(value => parseFloat(mmToInches(value)));
+    }
+
     function changeLanguage() {
         const selectedLang = document.getElementById('language').value;
         const translation = translations[selectedLang];
+
         document.getElementById('title').innerText = translation.title;
         document.getElementById('label-spessore').innerText = translation.spessore;
         document.getElementById('label-rimbocco').innerText = translation.rimbocco;
         document.getElementById('update-button').innerText = translation.updateButton;
 
-        // Aggiorna i titoli dei grafici
-        chart.options.plugins.title.text = translation.chart1Title;
-        chart.options.scales.x.title.text = translation.xAxis;
-        chart.options.scales.y.title.text = translation.yAxis;
-        chart.update();
+        // Converti i dati se la lingua è "USA"
+        if (selectedLang === "en-us") {
+            chart.data.labels = convertChartDataToInches(lunghezzaMT);
+            chart.data.datasets.forEach(dataset => {
+                dataset.data = convertChartDataToInches(dataset.data);
+            });
+            chart.options.scales.x.title.text = translation.xAxis;
+            chart.options.scales.y.title.text = translation.yAxis;
+            chart.update();
 
-        chart2.options.plugins.title.text = translation.chart2Title;
-        chart2.options.scales.x.title.text = translation.xAxis;
-        chart2.options.scales.y.title.text = translation.yAxis;
-        chart2.update();
+            chart2.data.labels = convertChartDataToInches(lunghezzaMTSecond);
+            chart2.data.datasets.forEach(dataset => {
+                dataset.data = convertChartDataToInches(dataset.data);
+            });
+            chart2.options.scales.x.title.text = translation.xAxis;
+            chart2.options.scales.y.title.text = translation.yAxis;
+            chart2.update();
+        } else {
+            // Ripristina i valori originali se non è "USA"
+            chart.data.labels = lunghezzaMT;
+            chart.data.datasets[0].data = calcolaValori(spessore, rimbocco, lunghezzaMT, lunghezzaCarta).altezzaMT;
+            chart.data.datasets[1].data = lunghezzaMT.map(() => rimbocco);
+            chart.data.datasets[2].data = lunghezzaMT.map(() => spessore);
+            chart.options.scales.x.title.text = translation.xAxis;
+            chart.options.scales.y.title.text = translation.yAxis;
+            chart.update();
+
+            chart2.data.labels = lunghezzaMTSecond.reverse();
+            chart2.data.datasets[0].data = calcolaValoriSecondo(spessore, rimbocco, lunghezzaMTSecond, lunghezzaCartaSecond).altezzaMT;
+            chart2.data.datasets[1].data = lunghezzaMTSecond.map(() => rimbocco);
+            chart2.data.datasets[2].data = lunghezzaMTSecond.map(() => spessore);
+            chart2.options.scales.x.title.text = translation.xAxis;
+            chart2.options.scales.y.title.text = translation.yAxis;
+            chart2.update();
+        }
     }
 
 
